@@ -2,7 +2,9 @@ import streamlit as st
 import cv2
 import numpy as np
 from PIL import Image as Image, ImageOps as ImagOps
+import tensorflow as tf
 from tensorflow.keras.models import load_model
+from tensorflow.keras.layers import DepthwiseConv2D
 import platform
 
 st.set_page_config(
@@ -55,9 +57,18 @@ div.stButton > button:hover {
 
 st.write("🌌 Versión de Python:", platform.python_version())
 
+class PatchedDepthwiseConv2D(DepthwiseConv2D):
+    def __init__(self, **kwargs):
+        kwargs.pop('groups', None)
+        super().__init__(**kwargs)
+
 @st.cache_resource
 def cargar_modelo_seguro():
-    return load_model('keras_model.h5', compile=False)
+    return load_model(
+        'keras_model.h5', 
+        custom_objects={'DepthwiseConv2D': PatchedDepthwiseConv2D}, 
+        compile=False
+    )
 
 try:
     model = cargar_modelo_seguro()
@@ -67,10 +78,10 @@ except Exception as e:
 st.title("🔮 Reconocimiento de Imágenes")
 
 try:
-    image = Image.open('gatito.png')
+    image = Image.open('gatito_morado.png')
     st.image(image, width=500)
 except:
-    st.info("👾 Imagen 'gatito.png' no encontrada. Recuerda subirla a tu directorio.")
+    st.info("👾 Imagen 'gatito_morado.png' no encontrada. Recuerda subirla a tu directorio.")
 
 with st.sidebar:
     st.subheader("🤖 Clasificador Teachable Machine")
