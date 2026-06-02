@@ -98,18 +98,3 @@ if img_file_buffer is not None:
         st.header('🐭 Hi Mouse, con Probabilidad: ' + str(round(prediction[0][0], 3)))
     if prediction[0][1] > 0.5:
         st.header('🙀 No Mouse :c, con Probabilidad: ' + str(round(prediction[0][1], 3)))
-```
-eof
-
-### ⚠️ Muy importante para tu despliegue:
-Para que esta solución funcione en Streamlit Cloud, debes indicarle al sistema que instale el paquete de compatibilidad agregando **`tf-keras`** a tu archivo de requisitos. 
-
-Modifica tu archivo **`requirements.txt`** en tu repositorio de GitHub para que quede exactamente así:
-
-```text
-streamlit
-numpy
-opencv-python-headless
-pillow
-tensorflow
-tf-keras
