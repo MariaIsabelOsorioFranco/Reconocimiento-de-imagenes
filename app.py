@@ -61,10 +61,10 @@ data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 st.title("🔮 Reconocimiento de Imágenes")
 
 try:
-    image = Image.open('OIG5.jpg')
+    image = Image.open('gatito.jpg')
     st.image(image, width=350)
 except:
-    st.info("👾 Imagen 'OIG5.jpg' no encontrada.")
+    st.info("👾 Imagen 'gatito.jpg' no encontrada.")
 
 with st.sidebar:
     st.subheader("🤖 Clasificador Teachable Machine")
