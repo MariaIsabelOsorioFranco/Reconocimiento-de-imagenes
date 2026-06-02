@@ -2,10 +2,12 @@ import streamlit as st
 import cv2
 import numpy as np
 from PIL import Image as Image, ImageOps as ImagOps
-import tensorflow as tf
-from tensorflow.keras.models import load_model
-from tensorflow.keras.layers import DepthwiseConv2D
 import platform
+
+try:
+    import tf_keras as keras
+except ImportError:
+    import tensorflow.keras as keras
 
 st.set_page_config(
     page_title="Reconocimiento Mágico",
@@ -57,31 +59,23 @@ div.stButton > button:hover {
 
 st.write("🌌 Versión de Python:", platform.python_version())
 
-class PatchedDepthwiseConv2D(DepthwiseConv2D):
-    def __init__(self, **kwargs):
-        kwargs.pop('groups', None)
-        super().__init__(**kwargs)
-
 @st.cache_resource
 def cargar_modelo_seguro():
-    return load_model(
-        'keras_model.h5', 
-        custom_objects={'DepthwiseConv2D': PatchedDepthwiseConv2D}, 
-        compile=False
-    )
+    return keras.models.load_model('keras_model.h5', compile=False)
 
 try:
     model = cargar_modelo_seguro()
 except Exception as e:
     st.error(f"Error al cargar el modelo: {e}")
+    st.info("💡 Si estás usando una versión moderna de Python/TensorFlow, asegúrate de añadir 'tf-keras' a tu archivo requirements.txt.")
 
 st.title("🔮 Reconocimiento de Imágenes")
 
 try:
-    image = Image.open('gatito_morado.png')
+    image = Image.open('gatito.png')
     st.image(image, width=500)
 except:
-    st.info("👾 Imagen 'gatito_morado.png' no encontrada. Recuerda subirla a tu directorio.")
+    st.info("👾 Imagen 'gatito.png' no encontrada. Recuerda subirla a tu directorio.")
 
 with st.sidebar:
     st.subheader("🤖 Clasificador Teachable Machine")
@@ -104,3 +98,18 @@ if img_file_buffer is not None:
         st.header('🐭 Hi Mouse, con Probabilidad: ' + str(round(prediction[0][0], 3)))
     if prediction[0][1] > 0.5:
         st.header('🙀 No Mouse :c, con Probabilidad: ' + str(round(prediction[0][1], 3)))
+```
+eof
+
+### ⚠️ Muy importante para tu despliegue:
+Para que esta solución funcione en Streamlit Cloud, debes indicarle al sistema que instale el paquete de compatibilidad agregando **`tf-keras`** a tu archivo de requisitos. 
+
+Modifica tu archivo **`requirements.txt`** en tu repositorio de GitHub para que quede exactamente así:
+
+```text
+streamlit
+numpy
+opencv-python-headless
+pillow
+tensorflow
+tf-keras
