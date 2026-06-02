@@ -93,15 +93,3 @@ if img_file_buffer is not None:
         st.header('🐭 Hi Mouse, con Probabilidad: ' + str(round(prediction[0][0], 3)))
     if prediction[0][1] > 0.5:
         st.header('🙀 No Mouse :c, con Probabilidad: ' + str(round(prediction[0][1], 3)))
-```
-eof
-
-### 💡 Un último consejo para tu despliegue:
-* **Nombre de archivo:** Recuerda que si tu archivo principal en GitHub se llama `appy.py` (con "y" al final), debes guardar este nuevo código con ese mismo nombre en tu repositorio para que Streamlit lo lea.
-* **Requirements:** Asegúrate de que tu archivo `requirements.txt` tenga únicamente:
-  ```text
-  streamlit
-  numpy
-  opencv-python-headless
-  pillow
-  tensorflow
