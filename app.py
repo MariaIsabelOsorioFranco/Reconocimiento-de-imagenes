@@ -2,7 +2,7 @@ import streamlit as st
 import cv2
 import numpy as np
 from PIL import Image as Image, ImageOps as ImagOps
-from keras.models import load_model
+import tensorflow as tf
 import platform
 
 st.set_page_config(
