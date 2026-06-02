@@ -67,10 +67,10 @@ except Exception as e:
 st.title("🔮 Reconocimiento de Imágenes")
 
 try:
-    image = Image.open('gatito_morado.png')
+    image = Image.open('gatito.png')
     st.image(image, width=500)
 except:
-    st.info("👾 Imagen 'gatito_morado.png' no encontrada. Recuerda subirla a tu directorio.")
+    st.info("👾 Imagen 'gatito.png' no encontrada. Recuerda subirla a tu directorio.")
 
 with st.sidebar:
     st.subheader("🤖 Clasificador Teachable Machine")
