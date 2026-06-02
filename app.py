@@ -2,7 +2,7 @@ import streamlit as st
 import cv2
 import numpy as np
 from PIL import Image as Image, ImageOps as ImagOps
-import tensorflow as tf
+from tensorflow.keras.models import load_model
 import platform
 
 st.set_page_config(
@@ -55,16 +55,22 @@ div.stButton > button:hover {
 
 st.write("🌌 Versión de Python:", platform.python_version())
 
-model = load_model('keras_model.h5')
-data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
+@st.cache_resource
+def cargar_modelo_seguro():
+    return load_model('keras_model.h5', compile=False)
+
+try:
+    model = cargar_modelo_seguro()
+except Exception as e:
+    st.error(f"Error al cargar el modelo: {e}")
 
 st.title("🔮 Reconocimiento de Imágenes")
 
 try:
-    image = Image.open('gatito.jpg')
-    st.image(image, width=350)
+    image = Image.open('gatito_morado.png')
+    st.image(image, width=500)
 except:
-    st.info("👾 Imagen 'gatito.jpg' no encontrada.")
+    st.info("👾 Imagen 'gatito_morado.png' no encontrada. Recuerda subirla a tu directorio.")
 
 with st.sidebar:
     st.subheader("🤖 Clasificador Teachable Machine")
@@ -82,9 +88,20 @@ if img_file_buffer is not None:
     data[0] = normalized_image_array
 
     prediction = model.predict(data)
-    print(prediction)
     
     if prediction[0][0] > 0.5:
         st.header('🐭 Hi Mouse, con Probabilidad: ' + str(round(prediction[0][0], 3)))
     if prediction[0][1] > 0.5:
         st.header('🙀 No Mouse :c, con Probabilidad: ' + str(round(prediction[0][1], 3)))
+```
+eof
+
+### 💡 Un último consejo para tu despliegue:
+* **Nombre de archivo:** Recuerda que si tu archivo principal en GitHub se llama `appy.py` (con "y" al final), debes guardar este nuevo código con ese mismo nombre en tu repositorio para que Streamlit lo lea.
+* **Requirements:** Asegúrate de que tu archivo `requirements.txt` tenga únicamente:
+  ```text
+  streamlit
+  numpy
+  opencv-python-headless
+  pillow
+  tensorflow
